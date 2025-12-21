@@ -1,4 +1,6 @@
 package com.nlipe.nlipe.modules.users.repository;
 
-public interface UserRepository {
-}
+import com.nlipe.nlipe.modules.users.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {}
