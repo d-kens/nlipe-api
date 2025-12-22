@@ -26,10 +26,6 @@ public class UserService {
         user.setRole(Role.valueOf(createUserDto.getRole()));
         user.setPasswordHash(passwordEncoder.encode(createUserDto.getPassword()));
 
-        System.out.println("-------------------------------------------------------------------------");
-        System.out.println(user.toString());
-        System.out.println("-------------------------------------------------------------------------");
-
         return userRepository.save(user);
     }
 }
