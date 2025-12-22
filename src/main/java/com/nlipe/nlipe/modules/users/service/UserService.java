@@ -3,8 +3,9 @@ package com.nlipe.nlipe.modules.users.service;
 
 import com.nlipe.nlipe.common.exception.EmailAlreadyExistException;
 import com.nlipe.nlipe.modules.users.dto.CreateUserDto;
+import com.nlipe.nlipe.modules.users.dto.UserResponse;
 import com.nlipe.nlipe.modules.users.entity.User;
-import com.nlipe.nlipe.modules.users.enums.Role;
+import com.nlipe.nlipe.modules.users.mapper.UserMapper;
 import com.nlipe.nlipe.modules.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,28 +17,19 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
-    public User createUser(CreateUserDto createUserDto) {
+    public UserResponse createUser(CreateUserDto createUserDto) {
 
         if (userRepository.existsByEmail(createUserDto.getEmail())) {
             throw new EmailAlreadyExistException();
         }
 
-        var user = new User();
-
-        user.setPhone(createUserDto.getPhone());
-        user.setEmail(createUserDto.getEmail());
-        user.setUserName(createUserDto.getUserName());
-
-        String roleInput = createUserDto.getRole();
-
-        if (roleInput == null || roleInput.isBlank())
-            user.setRole(Role.USER);
-        else
-            user.setRole(Role.valueOf(roleInput.trim().toUpperCase()));
-
+        User user = userMapper.toEntity(createUserDto);
         user.setPasswordHash(passwordEncoder.encode(createUserDto.getPassword()));
 
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        return userMapper.toResponse(user);
     }
 }
