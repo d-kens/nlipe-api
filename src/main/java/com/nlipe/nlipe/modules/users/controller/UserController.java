@@ -13,11 +13,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+
+    @GetMapping
+    public List<UserResponse> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/{userId}")
+    public UserResponse getUser(@PathVariable Long userId) {
+        return userService.getUser(userId);
+    }
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(
@@ -27,7 +39,11 @@ public class UserController {
         var response =  userService.createUser(createUserDto);
         var uri = uriComponentsBuilder.path("/users/{id}").buildAndExpand(response.getId()).toUri();
         return ResponseEntity.created(uri).body(response);
+    }
 
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
     }
 
     @ExceptionHandler(EmailAlreadyExistException.class)
