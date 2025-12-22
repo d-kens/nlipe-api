@@ -28,7 +28,14 @@ public class UserService {
         user.setPhone(createUserDto.getPhone());
         user.setEmail(createUserDto.getEmail());
         user.setUserName(createUserDto.getUserName());
-        user.setRole(Role.valueOf(createUserDto.getRole()));
+
+        String roleInput = createUserDto.getRole();
+
+        if (roleInput == null || roleInput.isBlank())
+            user.setRole(Role.USER);
+        else
+            user.setRole(Role.valueOf(roleInput.trim().toUpperCase()));
+
         user.setPasswordHash(passwordEncoder.encode(createUserDto.getPassword()));
 
         return userRepository.save(user);

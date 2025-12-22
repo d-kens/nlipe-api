@@ -14,7 +14,7 @@ public class RoleValidator implements ConstraintValidator<ValidRole, String> {
             return true;
 
         boolean valid = Arrays.stream(Role.values())
-                .anyMatch(role -> role.name().equals(value));
+                .anyMatch(role -> role.name().equals(value.trim().toUpperCase()));
 
         if (!valid) {
             context.disableDefaultConstraintViolation();
@@ -24,5 +24,6 @@ public class RoleValidator implements ConstraintValidator<ValidRole, String> {
         }
 
         return valid;
+
     }
 }
