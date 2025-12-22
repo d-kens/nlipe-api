@@ -1,0 +1,2 @@
+GET http://localhost:8080/users/9
+Content-Type: application/json
