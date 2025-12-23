@@ -4,7 +4,9 @@ import com.nlipe.nlipe.common.dto.PaginationRequest;
 import com.nlipe.nlipe.common.dto.PagingResult;
 import com.nlipe.nlipe.common.exception.EmailAlreadyExistException;
 import com.nlipe.nlipe.common.exception.NotFoundException;
+import com.nlipe.nlipe.common.exception.PasswordMismatchException;
 import com.nlipe.nlipe.common.utils.PaginationUtils;
+import com.nlipe.nlipe.modules.users.dto.ChangePasswordRequest;
 import com.nlipe.nlipe.modules.users.dto.CreateUserDto;
 import com.nlipe.nlipe.modules.users.dto.UserResponse;
 import com.nlipe.nlipe.modules.users.entity.User;
@@ -61,6 +63,18 @@ public class UserService {
         userRepository.save(user);
 
         return userMapper.toResponse(user);
+    }
+
+    public void changePassword(Long userId, ChangePasswordRequest request) {
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("user with id " + userId + " not found")
+        );
+
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPasswordHash()))
+            throw new PasswordMismatchException();
+
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
     public void deleteUser(Long userId) {

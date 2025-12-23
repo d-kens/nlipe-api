@@ -18,7 +18,7 @@ public class CreateUserDto {
     private String phone;
 
     @NotBlank(message = "password is required")
-    @Size(min = 8, max = 50, message = "password must be between 8 and 35 characters")
+    @Size(min = 8, max = 20, message = "password must be between 8 and 20 characters")
     private String password;
 
     @NotBlank(message = "username is required")
