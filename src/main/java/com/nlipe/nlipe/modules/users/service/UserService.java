@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,12 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public User getUserByEmail(String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(
+                () -> new NotFoundException("user with email " + email + "not found")
+        );
+    }
 
     public PagingResult<UserResponse> getAllUsers(PaginationRequest request) {
         final Pageable pageable = PaginationUtils.getPageable(request);
