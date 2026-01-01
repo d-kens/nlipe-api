@@ -1,6 +1,5 @@
 package com.nlipe.nlipe.modules.auth.controller;
 
-import com.nlipe.nlipe.common.dto.ErrorDto;
 import com.nlipe.nlipe.modules.auth.dto.AuthRequest;
 import com.nlipe.nlipe.modules.auth.service.AuthService;
 import jakarta.validation.Valid;
