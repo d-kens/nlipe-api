@@ -36,4 +36,19 @@ public class AuthService {
                 refreshTokenObject.toString()
         );
     }
+
+    public String refreshToken(String refreshToken) {
+        var refreshTokenObject = jwtService.parseToken(refreshToken);
+
+        if (refreshTokenObject == null || refreshTokenObject.isExpired())
+            return null;
+
+
+        var userEmail = refreshTokenObject.getUserEmail();
+        var user = userService.getUserByEmail(userEmail);
+
+        var accessTokenObject = jwtService.generateRefreshToken(user);
+        return accessTokenObject.toString();
+
+    }
 }

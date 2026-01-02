@@ -22,11 +22,15 @@ public class Jwt {
         return claims.getExpiration().before(new Date());
     }
 
-    public Long getId() {
+    public Long getUserId() {
         return Long.valueOf(claims.getSubject());
     }
 
-    public Role getRole() {
+    public String getUserEmail() {
+        return claims.get("email", String.class);
+    }
+
+    public Role getUserRole() {
         return Role.valueOf(claims.get("role", String.class));
     }
 

@@ -4,6 +4,7 @@ import com.nlipe.nlipe.config.JwtConfig;
 import com.nlipe.nlipe.modules.auth.dto.AuthRequest;
 import com.nlipe.nlipe.modules.auth.service.AuthService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -31,12 +32,24 @@ public class AuthController {
         var cookie = new Cookie("refreshToken", authResponse.getRefreshToken());
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
-        cookie.setPath("/auth/refresh");
+        cookie.setPath("/auth/refresh-token");
         cookie.setMaxAge(jwtConfig.getAccessTokenExpiration());
 
         response.addCookie(cookie);
 
         return ResponseEntity.ok(authResponse.getRefreshToken());
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<String> refreshToken(
+            @CookieValue(value = "refreshToken") String refreshToken
+    ) {
+        var accessToken = authService.refreshToken(refreshToken);
+
+        if (accessToken == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        return ResponseEntity.ok(accessToken);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
