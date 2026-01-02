@@ -1,4 +1,4 @@
-package com.nlipe.nlipe.config;
+package com.nlipe.nlipe.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

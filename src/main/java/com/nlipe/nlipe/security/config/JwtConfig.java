@@ -1,4 +1,4 @@
-package com.nlipe.nlipe.config;
+package com.nlipe.nlipe.security.config;
 
 import io.jsonwebtoken.security.Keys;
 import lombok.Data;

@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +51,7 @@ public class UserService {
         );
     }
 
-    public UserResponse getUser(Long userId) {
+    public UserResponse getUserById(Long userId) {
         var user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("user with id " + userId + " not found")
         );

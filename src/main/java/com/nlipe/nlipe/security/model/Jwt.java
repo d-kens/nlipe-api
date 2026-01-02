@@ -1,4 +1,4 @@
-package com.nlipe.nlipe.modules.auth.entity;
+package com.nlipe.nlipe.security.model;
 
 
 import com.nlipe.nlipe.modules.users.enums.Role;

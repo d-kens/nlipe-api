@@ -1,5 +1,7 @@
 package com.nlipe.nlipe.modules.auth.service;
 
+import com.nlipe.nlipe.modules.users.dto.UserResponse;
+import com.nlipe.nlipe.security.service.JwtService;
 import com.nlipe.nlipe.modules.auth.dto.AuthRequest;
 import com.nlipe.nlipe.modules.auth.dto.AuthResponse;
 import com.nlipe.nlipe.modules.users.service.UserService;
@@ -50,5 +52,9 @@ public class AuthService {
         var accessTokenObject = jwtService.generateRefreshToken(user);
         return accessTokenObject.toString();
 
+    }
+
+    public UserResponse getCurrentUser(Long userId) {
+        return userService.getUserById(userId);
     }
 }

@@ -1,4 +1,4 @@
-package com.nlipe.nlipe.modules.auth.service;
+package com.nlipe.nlipe.security.service;
 
 import com.nlipe.nlipe.common.exception.NotFoundException;
 import com.nlipe.nlipe.modules.users.service.UserService;
@@ -30,7 +30,6 @@ public class CustomUserDetailsService implements UserDetailsService  {
                     authorities
             );
         } catch (NotFoundException exception) {
-            System.out.println("-----------------------------------------------------------");
             throw new UsernameNotFoundException("user not found");
         }
     }

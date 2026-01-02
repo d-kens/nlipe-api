@@ -1,10 +1,10 @@
 package com.nlipe.nlipe.modules.auth.controller;
 
-import com.nlipe.nlipe.config.JwtConfig;
+import com.nlipe.nlipe.modules.users.dto.UserResponse;
+import com.nlipe.nlipe.security.config.JwtConfig;
 import com.nlipe.nlipe.modules.auth.dto.AuthRequest;
 import com.nlipe.nlipe.modules.auth.service.AuthService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -50,6 +51,13 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         return ResponseEntity.ok(accessToken);
+    }
+
+    @GetMapping("/me")
+    public UserResponse getCurrentUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var userId = (Long) authentication.getPrincipal();
+        return authService.getCurrentUser(userId);
     }
 
     @ExceptionHandler(BadCredentialsException.class)

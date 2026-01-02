@@ -1,7 +1,7 @@
-package com.nlipe.nlipe.modules.auth.service;
+package com.nlipe.nlipe.security.service;
 
-import com.nlipe.nlipe.config.JwtConfig;
-import com.nlipe.nlipe.modules.auth.entity.Jwt;
+import com.nlipe.nlipe.security.model.Jwt;
+import com.nlipe.nlipe.security.config.JwtConfig;
 import com.nlipe.nlipe.modules.users.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
