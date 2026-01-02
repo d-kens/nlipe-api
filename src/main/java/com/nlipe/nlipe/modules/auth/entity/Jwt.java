@@ -1,3 +1,43 @@
 package com.nlipe.nlipe.modules.auth.entity;
 
-public class Jwt {}
+
+import com.nlipe.nlipe.modules.users.enums.Role;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+
+public class Jwt {
+
+    private final Claims claims;
+    private final SecretKey secretKey;
+
+    public Jwt(Claims claims, SecretKey secretKey) {
+        this.claims = claims;
+        this.secretKey = secretKey;
+    }
+
+    public boolean isExpired() {
+        return claims.getExpiration().before(new Date());
+    }
+
+    public Long getId() {
+        return Long.valueOf(claims.getSubject());
+    }
+
+    public Role getRole() {
+        return Role.valueOf(claims.get("role", String.class));
+    }
+
+    /**
+     * Turn a Jwt object into a Jwt string that can be sent to clients
+            - Create a Jwt Builder
+            - Attach the claims (payload): These include sub (userID), role, expiry, etc
+            - Sign the Jwt: Use a cryptographic key
+            - Compact the Jwt into a string
+     */
+    public String toString() {
+        return Jwts.builder().claims(claims).signWith(secretKey).compact();
+    }
+}
