@@ -1,7 +1,10 @@
 package com.nlipe.nlipe.modules.auth.controller;
 
+import com.nlipe.nlipe.config.JwtConfig;
 import com.nlipe.nlipe.modules.auth.dto.AuthRequest;
 import com.nlipe.nlipe.modules.auth.service.AuthService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -15,11 +18,25 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private AuthService authService;
+    private final JwtConfig jwtConfig;
+    private final AuthService authService;
 
     @PostMapping("login")
-    public String login(@Valid @RequestBody AuthRequest authRequest) {
-        return authService.login(authRequest);
+    public ResponseEntity<String> login(
+            HttpServletResponse response,
+            @Valid @RequestBody AuthRequest authRequest
+    ) {
+        var authResponse = authService.login(authRequest);
+
+        var cookie = new Cookie("refreshToken", authResponse.getRefreshToken());
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/auth/refresh");
+        cookie.setMaxAge(jwtConfig.getAccessTokenExpiration());
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(authResponse.getRefreshToken());
     }
 
     @ExceptionHandler(BadCredentialsException.class)

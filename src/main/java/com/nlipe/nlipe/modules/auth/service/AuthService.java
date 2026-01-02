@@ -1,6 +1,7 @@
 package com.nlipe.nlipe.modules.auth.service;
 
 import com.nlipe.nlipe.modules.auth.dto.AuthRequest;
+import com.nlipe.nlipe.modules.auth.dto.AuthResponse;
 import com.nlipe.nlipe.modules.users.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,10 +12,11 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class AuthService {
 
+    private JwtService jwtService;
     private UserService userService;
     private AuthenticationManager authenticationManager;
 
-    public String login(AuthRequest authRequest) {
+    public AuthResponse login(AuthRequest authRequest) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -23,8 +25,15 @@ public class AuthService {
                 )
         );
 
-        // TODO: Generate JWT tokens
+        var user = userService.getUserByEmail(authRequest.getEmail());
 
-        return "This is your access token";
+        var accessTokenObject = jwtService.generateAccessToken(user);
+        var refreshTokenObject = jwtService.generateRefreshToken(user);
+
+
+        return new AuthResponse(
+                accessTokenObject.toString(),
+                refreshTokenObject.toString()
+        );
     }
 }
