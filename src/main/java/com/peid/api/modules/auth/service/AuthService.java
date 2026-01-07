@@ -51,7 +51,6 @@ public class AuthService {
 
         var accessTokenObject = jwtService.generateRefreshToken(user);
         return accessTokenObject.toString();
-
     }
 
     public UserResponse getCurrentUser(Long userId) {

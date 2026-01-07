@@ -1,5 +1,6 @@
 package com.peid.api.modules.auth.controller;
 
+import com.peid.api.modules.auth.dto.AccessToken;
 import com.peid.api.modules.users.dto.UserResponse;
 import com.peid.api.security.config.JwtConfig;
 import com.peid.api.modules.auth.dto.AuthRequest;
@@ -24,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("login")
-    public ResponseEntity<String> login(
+    public AccessToken login(
             HttpServletResponse response,
             @Valid @RequestBody AuthRequest authRequest
     ) {
@@ -38,11 +39,11 @@ public class AuthController {
 
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(authResponse.getRefreshToken());
+        return new AccessToken(authResponse.getAccessToken());
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<String> refreshToken(
+    public ResponseEntity<AccessToken> refreshToken(
             @CookieValue(value = "refreshToken") String refreshToken
     ) {
         var accessToken = authService.refreshToken(refreshToken);
@@ -50,7 +51,7 @@ public class AuthController {
         if (accessToken == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        return ResponseEntity.ok(accessToken);
+        return ResponseEntity.ok(new AccessToken(accessToken));
     }
 
     @GetMapping("/me")
